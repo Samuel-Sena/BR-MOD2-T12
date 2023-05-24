@@ -1,4 +1,3 @@
-import pygame
 import random
 
 from dino_runner.components.obstacles.cactus import Cactus
