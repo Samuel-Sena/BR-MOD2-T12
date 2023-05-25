@@ -2,15 +2,15 @@ import pygame
 
 from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, DEFAULT_TYPE, SHIELD_TYPE, DUCKING_SHIELD, JUMPING_SHIELD, RUNNING_SHIELD, HAMMER_TYPE, DUCKING_HAMMER, RUNNING_HAMMER, JUMPING_HAMMER
 
-X_POS = 80
-Y_POS = 310
+X_POS = 120
+Y_POS = 350
 JUMP_VEL = 8.5
 
 DUCK_IMG = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD, HAMMER_TYPE: DUCKING_HAMMER }
 JUMP_IMG = {DEFAULT_TYPE: JUMPING, SHIELD_TYPE: JUMPING_SHIELD, HAMMER_TYPE: JUMPING_HAMMER}
 RUN_IMG = {DEFAULT_TYPE: RUNNING, SHIELD_TYPE: RUNNING_SHIELD, HAMMER_TYPE: RUNNING_HAMMER}
 
-Y_POS_DUCK = 340
+Y_POS_DUCK = 280
 
 class Dinosaur: 
     def __init__(self):
@@ -53,13 +53,11 @@ class Dinosaur:
         self.image = DUCK_IMG[self.type][self.step_index//5]   
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = X_POS
-        self.dino_rect.y = Y_POS + 35
+        self.dino_rect.y = Y_POS + 20
         self.step_index	+= 1
 
         if self.step_index >= 10:
             self.step_index = 0
-        
-
 
     def update(self, user_input):
         if user_input[pygame.K_UP] and not self.dino_jump:

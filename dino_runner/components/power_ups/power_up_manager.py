@@ -21,7 +21,6 @@ class PowerUpManager:
 
             self.power_ups.append(power_up)
 
-
     def update(self, game):
         self.generate_power_up(game.score)
 
@@ -46,8 +45,6 @@ class PowerUpManager:
                 player.type = Hammer.type
                 player.power_up_time_up = power_up.start_time + (power_up.duration * 1000)
                 self.power_ups.remove(power_up)
-
-        
 
     def draw(self, screen):
         for power_up in self.power_ups:

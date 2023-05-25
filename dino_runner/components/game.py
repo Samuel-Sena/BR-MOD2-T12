@@ -1,6 +1,6 @@
 import pygame
 
-from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, FONT_STYLE, DEFAULT_TYPE
+from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, FONT_STYLE, DEFAULT_TYPE, MUSIC_DIR
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
@@ -10,6 +10,7 @@ from dino_runner.components.power_ups.shield import Shield
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.mixer.music.load(MUSIC_DIR)
         pygame.display.set_caption(TITLE)
         pygame.display.set_icon(ICON)
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -23,11 +24,8 @@ class Game:
         self.obstacle_manager = ObstacleManager()
         self.death_count = 0
         self.score = 0
-        
-
 
     def run(self):
-        # Game loop: events - update - draw
         self.playing = True
         self.reset_game()
         while self.playing:
@@ -45,6 +43,7 @@ class Game:
     
     def reset_game(self):
         self.player = Dinosaur()
+        pygame.mixer.music.play(-1)
         self.obstacle_manager.reset_obstacles()
         self.power_up_manager.reset_power_ups()
         self.game_speed = 20
@@ -82,20 +81,24 @@ class Game:
 
     def draw_score(self):
         font = pygame.font.Font(FONT_STYLE, 22)
-        text = font.render(f"Score: {self.score}", True, (0,0,0))
+        text = font.render(f"Score: {self.score}", True, (255,255,255))
         text_rect = text.get_rect()
-        text_rect.center = (1000, 50)
+        text_rect.center = (80, 50)
 
         self.screen.blit(text, text_rect)
 
     def draw_background(self):
-        image_width = BG.get_width()
-        self.screen.blit(BG, (self.x_pos_bg, self.y_pos_bg))
-        self.screen.blit(BG, (image_width + self.x_pos_bg, self.y_pos_bg))
-        if self.x_pos_bg <= -image_width:
-            self.screen.blit(BG, (image_width + self.x_pos_bg, self.y_pos_bg))
-            self.x_pos_bg = 0
-        self.x_pos_bg -= self.game_speed
+       image_width = BG.get_width() 
+       image_height = BG.get_height()    
+       scale_factor = max(SCREEN_WIDTH / image_width, SCREEN_HEIGHT / image_height)    
+       scaled_width = int(image_width * scale_factor)       
+       scaled_height = int(image_height * scale_factor)     
+       scaled_bg = pygame.transform.scale(BG, (scaled_width, scaled_height))  
+       self.x_pos_bg -= self.game_speed    
+       if self.x_pos_bg <= -scaled_width:        
+             self.x_pos_bg = 0             
+       self.screen.blit(scaled_bg, (self.x_pos_bg, SCREEN_HEIGHT - scaled_height))    
+       self.screen.blit(scaled_bg, (self.x_pos_bg + scaled_width, SCREEN_HEIGHT - scaled_height))
     
     def draw_power_up_time(self):
         if self.player.has_power_up:
@@ -103,10 +106,10 @@ class Game:
 
             if time_to_show >=0:
                 font = pygame.font.Font(FONT_STYLE, 22)
-                text = font.render(f"Power Up: {time_to_show}", True, (255,0,0))
+                text = font.render(f"Power Up: {time_to_show}", True, (255,255,255))
                 text_rect = text.get_rect()
-                text_rect.x = 425
-                text_rect.y = 100
+                text_rect.x = 900
+                text_rect.y = 50
                 self.screen.blit(text, text_rect)
             else:
                 self.player.has_power_up = False
@@ -122,20 +125,19 @@ class Game:
         self.screen.blit(text,text_rect)
 
     def show_menu(self):
-        self.screen.fill((255,255,255))
-
+        pygame.mixer.music.play(-1)
+        self.screen.fill((0,0,180))
         half_screen_height = SCREEN_HEIGHT //2
         
         
         if self.death_count == 0:
-            self.write_screen("Press (S) to start playing", half_screen_height, 25, (0,0,0))
+            self.write_screen("Geometry Dash", half_screen_height + 35, 50, (255,255,255))
+            self.write_screen("Press (S) to start playing", half_screen_height, 25, (255,255,255))
             
         else:
-            self.write_screen("Press (S) to start playing", half_screen_height, 25, (255, 0, 0))
-            self.write_screen(f"Score: {self.score}", half_screen_height + 25,20,(255,0,0))
-            self.write_screen(f"Deaths: {self.death_count}", half_screen_height + 50, 12, (0,0,0))
-
-        
+            self.write_screen("Press (S) to start playing", half_screen_height, 25, (255, 255, 255))
+            self.write_screen(f"Score: {self.score}", half_screen_height + 25,20,(255,255,255))
+            self.write_screen(f"Deaths: {self.death_count}", half_screen_height + 50, 20, (255,255,255))
         
         pygame.display.update()
         self.handle_events_on_menu()

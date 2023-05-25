@@ -1,5 +1,6 @@
 import pygame
 import random
+
 from dino_runner.components import power_ups
 from dino_runner.components.obstacles.cactus import Cactus
 from dino_runner.components.obstacles.bird import Bird
@@ -11,9 +12,7 @@ from dino_runner.components.power_ups.power_up_manager import PowerUpManager
 from dino_runner.components.power_ups.hammer import Hammer
 from dino_runner.components.power_ups.shield import Shield
 
-
 class ObstacleManager():
-    
 
     def __init__(self):
         self.obstacles = []
@@ -22,17 +21,18 @@ class ObstacleManager():
     def update(self, game):
        
         if len(self.obstacles) == 0:
-            obst = random.randint(1,3)
+            obst = random.randint(1,4)
             self.obst = obst
             if obst == 1:
-                obstacle = Cactus(SMALL_CACTUS)
+                obstacle = Cactus(SMALL_CACTUS, 350)
             elif obst == 2:
-                obstacle = Cactus(LARGE_CACTUS)
+                obstacle = Cactus(LARGE_CACTUS, 350)
+            elif obst == 3:
+                obstacle = Bird(BIRD, 355)
             else:
-                obstacle = Bird(BIRD) 
+                obstacle = Bird(BIRD, 250) 
 
             self.obstacles.append(obstacle)
-
 
         for obstacle in self.obstacles:
             obstacle.update(game.game_speed, self.obstacles)
@@ -45,11 +45,6 @@ class ObstacleManager():
                     break
                 else:
                     self.obstacles.remove(obstacle)
-                    
-        
-            
-        
-        
    
     def draw(self, screen):
         for obstacle in self.obstacles:
