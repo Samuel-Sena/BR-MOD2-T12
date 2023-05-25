@@ -20,7 +20,7 @@ DEFAULT_TYPE = "default"
 SHIELD_TYPE = "shield"
 HAMMER_TYPE = "hammer"
 
-ICON = pygame.image.load(os.path.join(IMG_DIR, "DinoWallpaper.png"))
+ICON = pygame.image.load(os.path.join(IMG_DIR, "Dino/cube.png"))
 
 RUNNING = [
     pygame.image.load(os.path.join(IMG_DIR, "Dino/cube.png")),
